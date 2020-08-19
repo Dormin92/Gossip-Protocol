@@ -1,0 +1,150 @@
+131
+
+ [0] APP
+ 2.0.0.0:0 [0] APP
+ 3.0.0.0:0 [0] APP
+ 4.0.0.0:0 [0] APP
+ 5.0.0.0:0 [0] APP
+ 6.0.0.0:0 [0] APP
+ 7.0.0.0:0 [0] APP
+ 8.0.0.0:0 [0] APP
+ 9.0.0.0:0 [0] APP
+ 10.0.0.0:0 [0] APP
+ 4.0.0.0:0 [0] Trying to join...
+ 3.0.0.0:0 [0] Trying to join...
+ 2.0.0.0:0 [0] Trying to join...
+ 1.0.0.0:0 [0] Starting up group...
+ 8.0.0.0:0 [1] Trying to join...
+ 7.0.0.0:0 [1] Trying to join...
+ 6.0.0.0:0 [1] Trying to join...
+ 5.0.0.0:0 [1] Trying to join...
+ 1.0.0.0:0 [1] Sending Table to 2:0
+ 1.0.0.0:0 [1] ID: 2 Heartbeat: 0 Timestamp: 1
+ 1.0.0.0:0 [1] -----------------------
+ 1.0.0.0:0 [1] Sending Table to 3:0
+ 1.0.0.0:0 [1] ID: 2 Heartbeat: 0 Timestamp: 1
+ 1.0.0.0:0 [1] ID: 3 Heartbeat: 0 Timestamp: 1
+ 1.0.0.0:0 [1] -----------------------
+ 1.0.0.0:0 [1] Sending Table to 4:0
+ 1.0.0.0:0 [1] ID: 2 Heartbeat: 0 Timestamp: 1
+ 1.0.0.0:0 [1] ID: 3 Heartbeat: 0 Timestamp: 1
+ 1.0.0.0:0 [1] ID: 4 Heartbeat: 0 Timestamp: 1
+ 1.0.0.0:0 [1] -----------------------
+ 10.0.0.0:0 [2] Trying to join...
+ 9.0.0.0:0 [2] Trying to join...
+ 4.0.0.0:0 [2] Received Table:
+ 4.0.0.0:0 [2] ID: 2 Heartbeat: 0 Timestamp: 1
+ 4.0.0.0:0 [2] ID: 3 Heartbeat: 0 Timestamp: 1
+ 4.0.0.0:0 [2] ID: 4 Heartbeat: 0 Timestamp: 1
+ 4.0.0.0:0 [2] -----------------------
+ 3.0.0.0:0 [2] Received Table:
+ 3.0.0.0:0 [2] ID: -1190573312 Heartbeat: 140736297693200 Timestamp: -5113473163652497407
+ 3.0.0.0:0 [2] ID: 32767 Heartbeat: -5113472751335604225 Timestamp: 32767
+ 3.0.0.0:0 [2] -----------------------
+ 2.0.0.0:0 [2] Received Table:
+ 2.0.0.0:0 [2] ID: 0 Heartbeat: 0 Timestamp: 0
+ 2.0.0.0:0 [2] -----------------------
+ 1.0.0.0:0 [2] Sending Table to 5:0
+ 1.0.0.0:0 [2] ID: 2 Heartbeat: 0 Timestamp: 1
+ 1.0.0.0:0 [2] ID: 3 Heartbeat: 0 Timestamp: 1
+ 1.0.0.0:0 [2] ID: 4 Heartbeat: 0 Timestamp: 1
+ 1.0.0.0:0 [2] ID: 5 Heartbeat: 0 Timestamp: 2
+ 1.0.0.0:0 [2] -----------------------
+ 1.0.0.0:0 [2] Sending Table to 6:0
+ 1.0.0.0:0 [2] ID: 2 Heartbeat: 0 Timestamp: 1
+ 1.0.0.0:0 [2] ID: 3 Heartbeat: 0 Timestamp: 1
+ 1.0.0.0:0 [2] ID: 4 Heartbeat: 0 Timestamp: 1
+ 1.0.0.0:0 [2] ID: 5 Heartbeat: 0 Timestamp: 2
+ 1.0.0.0:0 [2] ID: 6 Heartbeat: 0 Timestamp: 2
+ 1.0.0.0:0 [2] -----------------------
+ 1.0.0.0:0 [2] Sending Table to 7:0
+ 1.0.0.0:0 [2] ID: 2 Heartbeat: 0 Timestamp: 1
+ 1.0.0.0:0 [2] ID: 3 Heartbeat: 0 Timestamp: 1
+ 1.0.0.0:0 [2] ID: 4 Heartbeat: 0 Timestamp: 1
+ 1.0.0.0:0 [2] ID: 5 Heartbeat: 0 Timestamp: 2
+ 1.0.0.0:0 [2] ID: 6 Heartbeat: 0 Timestamp: 2
+ 1.0.0.0:0 [2] ID: 7 Heartbeat: 0 Timestamp: 2
+ 1.0.0.0:0 [2] -----------------------
+ 1.0.0.0:0 [2] Sending Table to 8:0
+ 1.0.0.0:0 [2] ID: 2 Heartbeat: 0 Timestamp: 1
+ 1.0.0.0:0 [2] ID: 3 Heartbeat: 0 Timestamp: 1
+ 1.0.0.0:0 [2] ID: 4 Heartbeat: 0 Timestamp: 1
+ 1.0.0.0:0 [2] ID: 5 Heartbeat: 0 Timestamp: 2
+ 1.0.0.0:0 [2] ID: 6 Heartbeat: 0 Timestamp: 2
+ 1.0.0.0:0 [2] ID: 7 Heartbeat: 0 Timestamp: 2
+ 1.0.0.0:0 [2] ID: 8 Heartbeat: 0 Timestamp: 2
+ 1.0.0.0:0 [2] -----------------------
+ 8.0.0.0:0 [3] Received Table:
+ 8.0.0.0:0 [3] ID: 2 Heartbeat: 0 Timestamp: 1
+ 8.0.0.0:0 [3] ID: 3 Heartbeat: 0 Timestamp: 1
+ 8.0.0.0:0 [3] ID: 4 Heartbeat: 0 Timestamp: 1
+ 8.0.0.0:0 [3] ID: 5 Heartbeat: 0 Timestamp: 2
+ 8.0.0.0:0 [3] ID: 6 Heartbeat: 0 Timestamp: 2
+ 8.0.0.0:0 [3] ID: 7 Heartbeat: 0 Timestamp: 2
+ 8.0.0.0:0 [3] ID: 8 Heartbeat: 0 Timestamp: 2
+ 8.0.0.0:0 [3] -----------------------
+ 7.0.0.0:0 [3] Received Table:
+ 7.0.0.0:0 [3] ID: 2 Heartbeat: 0 Timestamp: 1
+ 7.0.0.0:0 [3] ID: 3 Heartbeat: 0 Timestamp: 1
+ 7.0.0.0:0 [3] ID: 4 Heartbeat: 0 Timestamp: 1
+ 7.0.0.0:0 [3] ID: 5 Heartbeat: 0 Timestamp: 2
+ 7.0.0.0:0 [3] ID: 6 Heartbeat: 0 Timestamp: 2
+ 7.0.0.0:0 [3] ID: 7 Heartbeat: 0 Timestamp: 2
+ 7.0.0.0:0 [3] -----------------------
+ 6.0.0.0:0 [3] Received Table:
+ 6.0.0.0:0 [3] ID: 2 Heartbeat: 0 Timestamp: 1
+ 6.0.0.0:0 [3] ID: 3 Heartbeat: 0 Timestamp: 1
+ 6.0.0.0:0 [3] ID: 4 Heartbeat: 0 Timestamp: 1
+ 6.0.0.0:0 [3] ID: 5 Heartbeat: 0 Timestamp: 2
+ 6.0.0.0:0 [3] ID: 6 Heartbeat: 0 Timestamp: 2
+ 6.0.0.0:0 [3] -----------------------
+ 5.0.0.0:0 [3] Received Table:
+ 5.0.0.0:0 [3] ID: 0 Heartbeat: 140736297693200 Timestamp: 1
+ 5.0.0.0:0 [3] ID: 3 Heartbeat: 0 Timestamp: 1
+ 5.0.0.0:0 [3] ID: 4 Heartbeat: 0 Timestamp: 1
+ 5.0.0.0:0 [3] ID: 5 Heartbeat: 0 Timestamp: 2
+ 5.0.0.0:0 [3] -----------------------
+ 1.0.0.0:0 [3] Sending Table to 9:0
+ 1.0.0.0:0 [3] ID: 2 Heartbeat: 0 Timestamp: 1
+ 1.0.0.0:0 [3] ID: 3 Heartbeat: 0 Timestamp: 1
+ 1.0.0.0:0 [3] ID: 4 Heartbeat: 0 Timestamp: 1
+ 1.0.0.0:0 [3] ID: 5 Heartbeat: 0 Timestamp: 2
+ 1.0.0.0:0 [3] ID: 6 Heartbeat: 0 Timestamp: 2
+ 1.0.0.0:0 [3] ID: 7 Heartbeat: 0 Timestamp: 2
+ 1.0.0.0:0 [3] ID: 8 Heartbeat: 0 Timestamp: 2
+ 1.0.0.0:0 [3] ID: 9 Heartbeat: 0 Timestamp: 3
+ 1.0.0.0:0 [3] -----------------------
+ 1.0.0.0:0 [3] Sending Table to 10:0
+ 1.0.0.0:0 [3] ID: 2 Heartbeat: 0 Timestamp: 1
+ 1.0.0.0:0 [3] ID: 3 Heartbeat: 0 Timestamp: 1
+ 1.0.0.0:0 [3] ID: 4 Heartbeat: 0 Timestamp: 1
+ 1.0.0.0:0 [3] ID: 5 Heartbeat: 0 Timestamp: 2
+ 1.0.0.0:0 [3] ID: 6 Heartbeat: 0 Timestamp: 2
+ 1.0.0.0:0 [3] ID: 7 Heartbeat: 0 Timestamp: 2
+ 1.0.0.0:0 [3] ID: 8 Heartbeat: 0 Timestamp: 2
+ 1.0.0.0:0 [3] ID: 9 Heartbeat: 0 Timestamp: 3
+ 1.0.0.0:0 [3] ID: 10 Heartbeat: 0 Timestamp: 3
+ 1.0.0.0:0 [3] -----------------------
+ 10.0.0.0:0 [4] Received Table:
+ 10.0.0.0:0 [4] ID: 2 Heartbeat: 0 Timestamp: 1
+ 10.0.0.0:0 [4] ID: 3 Heartbeat: 0 Timestamp: 1
+ 10.0.0.0:0 [4] ID: 4 Heartbeat: 0 Timestamp: 1
+ 10.0.0.0:0 [4] ID: 5 Heartbeat: 0 Timestamp: 2
+ 10.0.0.0:0 [4] ID: 6 Heartbeat: 0 Timestamp: 2
+ 10.0.0.0:0 [4] ID: 7 Heartbeat: 0 Timestamp: 2
+ 10.0.0.0:0 [4] ID: 8 Heartbeat: 0 Timestamp: 2
+ 10.0.0.0:0 [4] ID: 9 Heartbeat: 0 Timestamp: 3
+ 10.0.0.0:0 [4] ID: 10 Heartbeat: 0 Timestamp: 3
+ 10.0.0.0:0 [4] -----------------------
+ 9.0.0.0:0 [4] Received Table:
+ 9.0.0.0:0 [4] ID: 0 Heartbeat: 140736297693200 Timestamp: 1
+ 9.0.0.0:0 [4] ID: 3 Heartbeat: 0 Timestamp: 1
+ 9.0.0.0:0 [4] ID: 4 Heartbeat: 0 Timestamp: 1
+ 9.0.0.0:0 [4] ID: 5 Heartbeat: 0 Timestamp: 2
+ 9.0.0.0:0 [4] ID: 6 Heartbeat: 0 Timestamp: 2
+ 9.0.0.0:0 [4] ID: 7 Heartbeat: 0 Timestamp: 2
+ 9.0.0.0:0 [4] ID: 8 Heartbeat: 0 Timestamp: 2
+ 9.0.0.0:0 [4] ID: 9 Heartbeat: 0 Timestamp: 3
+ 9.0.0.0:0 [4] -----------------------
+ 9.0.0.0:0 [100] Node failed at time=100
+ 1.0.0.0:0 [500] @@time=500
