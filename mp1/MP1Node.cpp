@@ -6,6 +6,9 @@
  **********************************/
 
 #include "MP1Node.h"
+#include <memory>
+
+using namespace std;
 
 /*
  * Note: You can change/add any functions in MP1Node.{h,cpp}
@@ -214,8 +217,8 @@ void MP1Node::checkMessages() {
  *
  * DESCRIPTION: Message handler for different message types
  */
-bool MP1Node::recvCallBack(void *env, char *data, int size ) {
-
+bool MP1Node::recvCallBack(void *env, char *data, int size ) 
+{
     MessageHdr *msg;
     msg = (MessageHdr*) data;
 
@@ -223,6 +226,12 @@ bool MP1Node::recvCallBack(void *env, char *data, int size ) {
     {
         long *newMemberHeartBeat = (long*)malloc(sizeof(long));
         Address *replyAddr = (Address*)malloc(sizeof(Address));
+
+        char* msgPtr = (char *)msg;
+        const char* msgEnd = (char *)msg + size;
+        msgPtr += 1;
+        unique_ptr<Address> replyAddr1 = make_address( msgPtr, msgEnd );
+
         memcpy(replyAddr, (char *)(msg+1), sizeof(Address));
         memcpy(newMemberHeartBeat, (char *)(msg+1) + 1 + sizeof(Address), sizeof(long));
 
@@ -237,6 +246,8 @@ bool MP1Node::recvCallBack(void *env, char *data, int size ) {
         msg->msgType = JOINREP;
         memcpy((char *)(msg+1), &memberNode->memberList, sizeof(memberNode->memberList));
         emulNet->ENsend(&memberNode->addr, replyAddr, (char *)msg, msgsize);
+        
+        //Printing to debuglog
         #ifdef DEBUGLOG
             string t = "Sending Table to " + replyAddr->getAddress();
             log->LOG(&memberNode->addr, t.c_str());
@@ -247,6 +258,7 @@ bool MP1Node::recvCallBack(void *env, char *data, int size ) {
             }
             log->LOG(&memberNode->addr, "-----------------------");
         #endif
+
         free(msg);
         free(newMemberHeartBeat);
         free(replyAddr);
@@ -254,6 +266,8 @@ bool MP1Node::recvCallBack(void *env, char *data, int size ) {
     else if(msg->msgType == JOINREP)
     {
         memcpy(&(memberNode->memberList), (char *)(msg+1), size - sizeof(msg+1));
+
+        //Printing to debuglog
         #ifdef DEBUGLOG
             log->LOG(&memberNode->addr, "Received Table:");
             for(auto it = memberNode->memberList.begin(); it != memberNode->memberList.end(); it++)
@@ -264,8 +278,14 @@ bool MP1Node::recvCallBack(void *env, char *data, int size ) {
             log->LOG(&memberNode->addr, "-----------------------");
         #endif
     }
-
 }
+
+unique_ptr<Address> make_address( char*& msgPtr, const char* msgEnd )
+{
+  unique_ptr<Address> addr = make_unique<Address>("12:0");
+  return addr;
+}
+
 
 /**
  * FUNCTION NAME: nodeLoopOps

@@ -38,8 +38,8 @@
  4.0.0.0:0 [2] ID: 4 Heartbeat: 0 Timestamp: 1
  4.0.0.0:0 [2] -----------------------
  3.0.0.0:0 [2] Received Table:
- 3.0.0.0:0 [2] ID: -1190573312 Heartbeat: 140736297693200 Timestamp: -5113473163652497407
- 3.0.0.0:0 [2] ID: 32767 Heartbeat: -5113472751335604225 Timestamp: 32767
+ 3.0.0.0:0 [2] ID: -549283072 Heartbeat: 140736938983440 Timestamp: -2359152555608506367
+ 3.0.0.0:0 [2] ID: 32767 Heartbeat: -2359152143291613185 Timestamp: 32767
  3.0.0.0:0 [2] -----------------------
  2.0.0.0:0 [2] Received Table:
  2.0.0.0:0 [2] ID: 0 Heartbeat: 0 Timestamp: 0
@@ -99,7 +99,7 @@
  6.0.0.0:0 [3] ID: 6 Heartbeat: 0 Timestamp: 2
  6.0.0.0:0 [3] -----------------------
  5.0.0.0:0 [3] Received Table:
- 5.0.0.0:0 [3] ID: 0 Heartbeat: 140736297693200 Timestamp: 1
+ 5.0.0.0:0 [3] ID: 0 Heartbeat: 140736938983440 Timestamp: 1
  5.0.0.0:0 [3] ID: 3 Heartbeat: 0 Timestamp: 1
  5.0.0.0:0 [3] ID: 4 Heartbeat: 0 Timestamp: 1
  5.0.0.0:0 [3] ID: 5 Heartbeat: 0 Timestamp: 2
@@ -137,7 +137,7 @@
  10.0.0.0:0 [4] ID: 10 Heartbeat: 0 Timestamp: 3
  10.0.0.0:0 [4] -----------------------
  9.0.0.0:0 [4] Received Table:
- 9.0.0.0:0 [4] ID: 0 Heartbeat: 140736297693200 Timestamp: 1
+ 9.0.0.0:0 [4] ID: 0 Heartbeat: 140736938983440 Timestamp: 1
  9.0.0.0:0 [4] ID: 3 Heartbeat: 0 Timestamp: 1
  9.0.0.0:0 [4] ID: 4 Heartbeat: 0 Timestamp: 1
  9.0.0.0:0 [4] ID: 5 Heartbeat: 0 Timestamp: 2
@@ -146,5 +146,5 @@
  9.0.0.0:0 [4] ID: 8 Heartbeat: 0 Timestamp: 2
  9.0.0.0:0 [4] ID: 9 Heartbeat: 0 Timestamp: 3
  9.0.0.0:0 [4] -----------------------
- 9.0.0.0:0 [100] Node failed at time=100
+ 10.0.0.0:0 [100] Node failed at time=100
  1.0.0.0:0 [500] @@time=500
