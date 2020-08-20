@@ -14,6 +14,7 @@
 #include "Member.h"
 #include "EmulNet.h"
 #include "Queue.h"
+#include <memory>
 
 /**
  * Macros
@@ -70,7 +71,7 @@ public:
 	void nodeLoop();
 	void checkMessages();
 	bool recvCallBack(void *env, char *data, int size);
-	unique_ptr<Address> make_address( char*& msgPtr, const char* msgEnd );
+	std::unique_ptr<Address> make_address( char*& msgPtr, const char* msgEnd );
 	void nodeLoopOps();
 	int isNullAddress(Address *addr);
 	Address getJoinAddress();

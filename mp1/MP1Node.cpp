@@ -230,7 +230,7 @@ bool MP1Node::recvCallBack(void *env, char *data, int size )
         char* msgPtr = (char *)msg;
         const char* msgEnd = (char *)msg + size;
         msgPtr += 1;
-        unique_ptr<Address> replyAddr1 = make_address( msgPtr, msgEnd );
+        std::unique_ptr<Address> replyAddr1 = make_address( msgPtr, msgEnd );
 
         memcpy(replyAddr, (char *)(msg+1), sizeof(Address));
         memcpy(newMemberHeartBeat, (char *)(msg+1) + 1 + sizeof(Address), sizeof(long));
@@ -280,9 +280,9 @@ bool MP1Node::recvCallBack(void *env, char *data, int size )
     }
 }
 
-unique_ptr<Address> make_address( char*& msgPtr, const char* msgEnd )
+std::unique_ptr<Address> make_address( char*& msgPtr, const char* msgEnd )
 {
-  unique_ptr<Address> addr = make_unique<Address>("12:0");
+  std::unique_ptr<Address> addr = std::make_unique<Address>("12:0");
   return addr;
 }
 
