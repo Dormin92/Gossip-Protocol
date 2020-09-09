@@ -6,7 +6,8 @@
  **********************************/
 
 #include "MP1Node.h"
-#include <memory>
+#include <string>
+#include <random>
 
 using namespace std;
 
@@ -166,6 +167,7 @@ int MP1Node::finishUpThisNode(){
    /*
     * Your code goes here
     */
+   return 0;
 }
 
 /**
@@ -219,73 +221,193 @@ void MP1Node::checkMessages() {
  */
 bool MP1Node::recvCallBack(void *env, char *data, int size ) 
 {
-    MessageHdr *msg;
-    msg = (MessageHdr*) data;
+    MessageHdr *msg = (MessageHdr*) data;
 
     if(msg->msgType == JOINREQ)
     {
-        long *newMemberHeartBeat = (long*)malloc(sizeof(long));
-        Address *replyAddr = (Address*)malloc(sizeof(Address));
-
-        char* msgPtr = (char *)msg;
-        const char* msgEnd = (char *)msg + size;
-        msgPtr += 1;
-        std::unique_ptr<Address> replyAddr1 = make_address( msgPtr, msgEnd );
-
-        memcpy(replyAddr, (char *)(msg+1), sizeof(Address));
-        memcpy(newMemberHeartBeat, (char *)(msg+1) + 1 + sizeof(Address), sizeof(long));
-
-        //Add this member to member list
-        int id = replyAddr->addr[0];
-        short port = replyAddr->addr[4];
-        memberNode->memberList.emplace_back(id, port, *newMemberHeartBeat, (long)par->getcurrtime());
-
-        // create JOINREP message
-        size_t msgsize = sizeof(MessageHdr) + sizeof(memberNode->memberList) + sizeof(long) + 1;
-        msg = (MessageHdr *) malloc(msgsize * sizeof(char));
-        msg->msgType = JOINREP;
-        memcpy((char *)(msg+1), &memberNode->memberList, sizeof(memberNode->memberList));
-        emulNet->ENsend(&memberNode->addr, replyAddr, (char *)msg, msgsize);
-        
-        //Printing to debuglog
-        #ifdef DEBUGLOG
-            string t = "Sending Table to " + replyAddr->getAddress();
-            log->LOG(&memberNode->addr, t.c_str());
-            for(auto it = memberNode->memberList.begin(); it != memberNode->memberList.end(); it++)
-            {
-                string s = "ID: " + to_string(it->getid()) + " Heartbeat: " + to_string(it->getheartbeat()) + " Timestamp: " + to_string(it->gettimestamp());
-                log->LOG(&memberNode->addr, s.c_str());
-            }
-            log->LOG(&memberNode->addr, "-----------------------");
-        #endif
-
-        free(msg);
-        free(newMemberHeartBeat);
-        free(replyAddr);
+        HandleJoinRequest(msg);
     }
     else if(msg->msgType == JOINREP)
     {
-        memcpy(&(memberNode->memberList), (char *)(msg+1), size - sizeof(msg+1));
+        HandleJoinReply(msg, data, size);
 
-        //Printing to debuglog
-        #ifdef DEBUGLOG
-            log->LOG(&memberNode->addr, "Received Table:");
-            for(auto it = memberNode->memberList.begin(); it != memberNode->memberList.end(); it++)
+        // //Printing to debuglog
+        // #ifdef DEBUGLOG
+        //     log->LOG(&memberNode->addr, "Received Table:");
+        //     for(auto it = memberNode->memberList.begin(); it != memberNode->memberList.end(); it++)
+        //     {
+        //         string s = "ID: " + to_string(it->getid()) + " Heartbeat: " + to_string(it->getheartbeat()) + " Timestamp: " + to_string(it->gettimestamp());
+        //         log->LOG(&memberNode->addr, s.c_str());
+        //     }
+        //     log->LOG(&memberNode->addr, "-----------------------");
+        // #endif
+    }
+    else if(msg->msgType == GOSSIP)
+    {
+        HandleGossip(msg, data, size);
+    }
+    return true;
+}
+
+void MP1Node::HandleJoinRequest(MessageHdr* msg)
+{
+    //get address and heartbeat from joinreq
+    long *newMemberHeartBeat = new long;
+    Address *replyAddr = new Address;
+    memcpy(replyAddr            , (char *)(msg+1)                           , sizeof(Address));
+    memcpy(newMemberHeartBeat   , (char *)(msg+1) + 1 + sizeof(Address)     , sizeof(long));
+
+    //Add this member to member list
+    int id = replyAddr->addr[0];
+    short port = replyAddr->addr[4];
+    memberNode->memberList.emplace_back(id, port, *newMemberHeartBeat, (long)par->getcurrtime());
+    log->logNodeAdd(&memberNode->addr, replyAddr);
+
+    //create JOINREP message
+    size_t MemListSize = sizeof(MemberListEntry) * (memberNode->memberList.size()+1); //+1 to make room for self
+    size_t msgsize = sizeof(MessageHdr) + MemListSize;
+    msg = (MessageHdr *) operator new(msgsize * sizeof(char));
+    msg->msgType = JOINREP;
+    char serialisedMemberList[MemListSize];
+    SerialiseMemberList(serialisedMemberList);
+    memcpy((char *)(msg+1), serialisedMemberList, MemListSize);
+
+    //send joinrep
+    emulNet->ENsend(&memberNode->addr, replyAddr, (char *)msg, msgsize);
+    
+    //delete pointers
+    delete msg;
+    delete newMemberHeartBeat;
+    delete replyAddr;
+}
+
+void MP1Node::HandleJoinReply(MessageHdr* msg, char* data, int size)
+{
+    size -= sizeof(MessageHdr);
+    data += sizeof(MessageHdr);
+
+    while(size > 0)
+    {
+        int id = *(int*)(&memberNode->addr.addr);
+        MemberListEntry MLE  = DeserialiseMemberListEntry(data);
+
+        //make sure current entry is not self
+        if(MLE.getid() != id)
+        {
+            memberNode->memberList.emplace_back(MLE);
+            Address* NewNodeAddress = new Address(to_string(MLE.getid()) + ":"  + to_string(MLE.getport()));
+            log->logNodeAdd(&memberNode->addr, NewNodeAddress);
+        }
+
+        data += sizeof(MemberListEntry);
+        size -= sizeof(MemberListEntry);
+    }
+
+    //node is now in group
+    memberNode->inGroup = true;
+
+    //update number of neighbors
+    memberNode->nnb = memberNode->memberList.size();
+}
+
+void MP1Node::HandleGossip(MessageHdr* msg, char* data, int size)
+{
+    size -= sizeof(MessageHdr);
+    data += sizeof(MessageHdr);
+    vector<MemberListEntry> ReceivedMemberList;
+    while(size > 0)
+    {
+        int id = *(int*)(&memberNode->addr.addr);
+        MemberListEntry MLE  = DeserialiseMemberListEntry(data);
+
+        //make sure current entry is not self
+        if(MLE.getid() != id)
+            ReceivedMemberList.emplace_back(MLE);
+
+        data += sizeof(MemberListEntry);
+        size -= sizeof(MemberListEntry);
+    }
+
+    //compare new members with existing ones
+    for(auto r_It = ReceivedMemberList.begin(); r_It != ReceivedMemberList.end(); r_It++)
+    {
+        auto Local_Iterator = find_if(memberNode->memberList.begin(), memberNode->memberList.end(), [r_It](MemberListEntry MLE){return r_It->getid() == MLE.getid(); });
+        
+        //is entry present in memberlist?
+        if(Local_Iterator != memberNode->memberList.end())
+        {
+            //if present, is it more recent?
+            if(Local_Iterator->gettimestamp() < r_It->gettimestamp())
             {
-                string s = "ID: " + to_string(it->getid()) + " Heartbeat: " + to_string(it->getheartbeat()) + " Timestamp: " + to_string(it->gettimestamp());
-                log->LOG(&memberNode->addr, s.c_str());
+                Local_Iterator->setheartbeat(r_It->getheartbeat());
+                Local_Iterator->settimestamp(r_It->gettimestamp());
             }
-            log->LOG(&memberNode->addr, "-----------------------");
-        #endif
+        }
+        else if((par->getcurrtime() - r_It->gettimestamp()) < TFAIL)//if not present, and not marked as failed (through timestamp), then add to list
+        {
+            memberNode->memberList.emplace_back(r_It->getid(), r_It->getport(), r_It->getheartbeat(), par->getcurrtime());
+            Address* NewNodeAddress = new Address(to_string(r_It->getid()) + ":"  + to_string(r_It->getport()));
+            log->logNodeAdd(&memberNode->addr, NewNodeAddress);
+        }
+    }
+
+    //update number of neighbors
+    memberNode->nnb = memberNode->memberList.size();
+}
+
+void MP1Node::SerialiseMemberList(char* outMemberList)
+{
+    //serialize self
+    char Entry[sizeof(MemberListEntry)];
+    int id = *(int*)(&memberNode->addr.addr);
+	int port = *(short*)(&memberNode->addr.addr[4]);
+    MemberListEntry self = MemberListEntry(id, port, memberNode->heartbeat, par->getcurrtime());
+    SerialiseMemberEntry(self, Entry);
+    memcpy(outMemberList, Entry, sizeof(MemberListEntry));
+
+    //serialize memberlist
+    for(int i = 0; i < memberNode->memberList.size(); i++)
+    {
+        char Entry[sizeof(MemberListEntry)];
+        SerialiseMemberEntry(memberNode->memberList[i], Entry);
+        memcpy(outMemberList + (sizeof(MemberListEntry) * (i + 1)), Entry, sizeof(MemberListEntry));
     }
 }
 
-std::unique_ptr<Address> make_address( char*& msgPtr, const char* msgEnd )
+void MP1Node::SerialiseMemberEntry(MemberListEntry m, char* outListEntry)
 {
-  std::unique_ptr<Address> addr = std::make_unique<Address>("12:0");
-  return addr;
+    int id = m.getid();
+    short port = m.getport();
+    long hb = m.getheartbeat();
+    long ts = m.gettimestamp();
+    memcpy(outListEntry, &id, sizeof(id));
+    memcpy(outListEntry + sizeof(id), &port, sizeof(port));
+    memcpy(outListEntry + sizeof(id) + (sizeof(port) * 2), &hb, sizeof(hb));
+    memcpy(outListEntry + sizeof(id) + (sizeof(port) * 2) + sizeof(hb), &ts, sizeof(ts));
 }
 
+MemberListEntry MP1Node::DeserialiseMemberListEntry(char* data)
+{
+    MemberListEntry MLE;
+    memcpy(&MLE.id          , data                                                                      , sizeof(MLE.id));
+    memcpy(&MLE.port        , data + sizeof(MLE.id)                                                     , sizeof(MLE.port));
+    memcpy(&MLE.heartbeat   , data + sizeof(MLE.id) + sizeof(MLE.port) + 2                              , sizeof(MLE.heartbeat));
+    memcpy(&MLE.timestamp   , data + sizeof(MLE.heartbeat) + sizeof(MLE.id) + sizeof(MLE.port) + 2      , sizeof(MLE.timestamp));
+    return MLE;
+}
+
+vector<int> MP1Node::RandomNeighbors(int NumberOfNeighbors)
+{
+    vector<int> v;
+    for(int i = 0; i < NumberOfNeighbors; i++)
+    {
+        v.push_back(i);
+    }
+    random_device rd;
+    mt19937 g(rd());
+    shuffle(v.begin(), v.end(), g);
+    return v;
+}
 
 /**
  * FUNCTION NAME: nodeLoopOps
@@ -294,12 +416,49 @@ std::unique_ptr<Address> make_address( char*& msgPtr, const char* msgEnd )
  * 				the nodes
  * 				Propagate your membership list
  */
-void MP1Node::nodeLoopOps() {
+void MP1Node::nodeLoopOps() 
+{
+    //if node is in group
+    if(memberNode->inGroup)
+    {
+        memberNode->heartbeat++;
 
-	/*
-	 * Your code goes here
-	 */
+        int t = par->getcurrtime();
+        auto TimeOutIterator = find_if(memberNode->memberList.begin(), memberNode->memberList.end(), [t](MemberListEntry MLE){  return (t - MLE.gettimestamp() > TREMOVE);  });
+        if(TimeOutIterator != memberNode->memberList.end())
+        {
+            Address* TimedOutNodeAddress = new Address(to_string(TimeOutIterator->getid()) + ":"  + to_string(TimeOutIterator->getport()));
+            log->logNodeRemove(&memberNode->addr, TimedOutNodeAddress);
+            memberNode->memberList.erase(TimeOutIterator);
+        }
 
+        //construct messageHdr with type GOSSIP. Initialise size as the size of membership table
+        size_t MemListSize = sizeof(MemberListEntry) * (memberNode->memberList.size());
+        size_t msgsize = sizeof(MessageHdr) + MemListSize;
+        MessageHdr* msg = (MessageHdr *) operator new(msgsize * sizeof(char));
+        msg->msgType = GOSSIP;
+        
+        int LIST_SIZE = memberNode->memberList.size();
+        vector<int> rn = RandomNeighbors(memberNode->nnb);
+
+        for(int i = 0; i < memberNode->nnb/2; i++)
+        {
+            int NeighborToGossipTo = rn[i];
+            Address* NeighborAddr = new Address(to_string(memberNode->memberList[NeighborToGossipTo].getid()) + ":"  + to_string(memberNode->memberList[NeighborToGossipTo].getport()));
+
+            //serialise membership list and memcpy it to the messageHdr
+            char serialisedMemberList[MemListSize];
+            SerialiseMemberList(serialisedMemberList);
+            memcpy((char *)(msg+1), serialisedMemberList, MemListSize);
+
+            //ENsend
+            emulNet->ENsend(&memberNode->addr, NeighborAddr, (char *)msg, msgsize);
+
+            delete NeighborAddr;
+        }
+
+        delete msg;
+    }
     return;
 }
 

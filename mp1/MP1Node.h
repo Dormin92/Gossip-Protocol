@@ -32,7 +32,7 @@
 enum MsgTypes{
     JOINREQ,
     JOINREP,
-    DUMMYLASTMSGTYPE
+    GOSSIP
 };
 
 /**
@@ -71,13 +71,20 @@ public:
 	void nodeLoop();
 	void checkMessages();
 	bool recvCallBack(void *env, char *data, int size);
-	std::unique_ptr<Address> make_address( char*& msgPtr, const char* msgEnd );
 	void nodeLoopOps();
 	int isNullAddress(Address *addr);
 	Address getJoinAddress();
 	void initMemberListTable(Member *memberNode);
 	void printAddress(Address *addr);
 	virtual ~MP1Node();
+
+	void HandleJoinRequest(MessageHdr* msg);
+	void HandleJoinReply(MessageHdr* msg, char* data, int size);
+	void HandleGossip(MessageHdr* msg, char* data, int size);
+	void SerialiseMemberList(char* outMemberList);
+	void SerialiseMemberEntry(MemberListEntry m, char* outListEntry);
+	MemberListEntry DeserialiseMemberListEntry(char* data);
+	vector<int> RandomNeighbors(int NumberOfNeighbors);
 };
 
 #endif /* _MP1NODE_H_ */
